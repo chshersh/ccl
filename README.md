@@ -1,0 +1,2 @@
+# ccl
+Categorical Configuration Language
