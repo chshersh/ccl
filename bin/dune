@@ -1,0 +1,4 @@
+(executable
+ (public_name ccl)
+ (name main)
+ (libraries ccl))
