@@ -16,12 +16,6 @@ Build the project:
 dune build
 ```
 
-Run the project:
-
-```
-dune exec bin/main.exe -- owner/repo
-```
-
 Install dev dependencies:
 
 ```

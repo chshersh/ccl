@@ -1,2 +1,8 @@
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
+
 (library
- (name ccl))
+ (name ccl)
+ (modules parser lexer ccl))

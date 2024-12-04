@@ -5,21 +5,22 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github chshersh/ccl))
 
-(authors "Author Name")
+(authors "Dmitrii Kovanikov")
+(maintainers "Dmitrii Kovanikov")
 
-(maintainers "Maintainer Name")
+(license MIT)
 
-(license LICENSE)
+(documentation https://github.com/chshersh/ccl)
 
-(documentation https://url/to/documentation)
+(using menhir 3.0)
 
 (package
  (name ccl)
- (synopsis "A short synopsis")
- (description "A longer description")
- (depends ocaml dune)
+ (synopsis "Categorical Configuration Language")
+ (description "A minimalistic yet powerful configuration languaged based on category theory principles")
+ (depends ocaml dune menhir)
  (tags
   (topics "to describe" your project)))
 
