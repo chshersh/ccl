@@ -14,14 +14,12 @@
 
 (documentation https://github.com/chshersh/ccl)
 
-(using menhir 3.0)
-
 (package
  (name ccl)
  (synopsis "Categorical Configuration Language")
  (description "A minimalistic yet powerful configuration languaged based on category theory principles")
- (depends ocaml dune menhir)
+ (depends ocaml dune angstrom)
  (tags
-  (topics "to describe" your project)))
+  (config language parser)))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

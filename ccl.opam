@@ -6,14 +6,14 @@ description:
 maintainer: ["Dmitrii Kovanikov"]
 authors: ["Dmitrii Kovanikov"]
 license: "MIT"
-tags: ["topics" "to describe" "your" "project"]
+tags: ["config" "language" "parser"]
 homepage: "https://github.com/chshersh/ccl"
 doc: "https://github.com/chshersh/ccl"
 bug-reports: "https://github.com/chshersh/ccl/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.15"}
-  "menhir"
+  "angstrom"
   "odoc" {with-doc}
 ]
 build: [
