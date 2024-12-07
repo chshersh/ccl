@@ -39,7 +39,6 @@ let value_p =
   value_line_p
 
 let key_val =
-  let* _ = blank in
   let* key = many (not_char '=') >>| from_chars in
   let* _ = blank in
   let* _ = char '=' in
@@ -47,7 +46,9 @@ let key_val =
   let* _ = blank in
   return ({ key; value } : Model.key_val)
 
-let kvs_p = many key_val
+let kvs_p =
+  let* _ = blank in
+  many key_val
 
 let parse str =
   match parse_string ~consume:All kvs_p str with
