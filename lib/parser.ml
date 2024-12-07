@@ -45,7 +45,7 @@ let key_val =
   let* _ = char '=' in
   let* value = value_p >>| to_str in
   let* _ = blank in
-  return (key, value)
+  return ({ key; value } : Model.key_val)
 
 let kvs_p = many key_val
 
