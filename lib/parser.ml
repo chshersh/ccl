@@ -2,8 +2,6 @@ open Angstrom
 
 let space = char ' ' <|> char '\t' >>| fun _ -> ()
 let blank = skip_many (space <|> end_of_line)
-let from_chars chars = chars |> List.to_seq |> String.of_seq |> String.trim
-let to_str chars = chars |> List.to_seq |> String.of_seq
 
 let value_p =
   (* Ignore all leading spaces *)
@@ -38,11 +36,14 @@ let value_p =
   (* Call recursive function *)
   value_line_p
 
+let trim_key = String_extra.of_chars_trimmed
+let trim_value value = String_extra.(value |> of_chars |> rtrim)
+
 let key_val =
-  let* key = many (not_char '=') >>| from_chars in
+  let* key = many (not_char '=') >>| trim_key in
   let* _ = blank in
   let* _ = char '=' in
-  let* value = value_p >>| to_str in
+  let* value = value_p >>| trim_value in
   let* _ = blank in
   return ({ key; value } : Model.key_val)
 
