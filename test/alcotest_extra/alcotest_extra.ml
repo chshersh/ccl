@@ -1,3 +1,4 @@
 module Testable = Testable
 
-let quick name test = (name, `Quick, test)
+let quick : string -> (unit -> unit) -> unit Alcotest.test_case =
+ fun name test -> (name, `Quick, test)

@@ -1,13 +1,49 @@
-let expected_key_val : Ccl.Model.key_val = { key = "key"; value = "val" }
+open Ccl.Model
 
-let mk_test_single ~name config =
-  let expected = [ expected_key_val ] in
+let mk_test_single ~name ~expected ~config () =
+  let expected = [ expected ] in
   Alcotest.(check Alcotest_extra.Testable.config)
     name expected (Ccl.Parser.parse config)
 
-let test config =
+let mk_test ~expected config =
   let name = Printf.sprintf "'%s'" (String.escaped config) in
-  Alcotest_extra.quick name (fun () -> mk_test_single ~name config)
+  Alcotest_extra.quick name (mk_test_single ~name ~expected ~config)
+
+let test =
+  let expected = { key = "key"; value = "val" } in
+  mk_test ~expected
+
+let test_empty_value =
+  let expected = { key = "key"; value = "" } in
+  mk_test ~expected
+
+let test_empty_key =
+  let expected = { key = ""; value = "val" } in
+  mk_test ~expected
+
+let test_empty_key_value =
+  let expected = { key = ""; value = "" } in
+  mk_test ~expected
+
+let test_multiple_equality =
+  let config = "a=b=c" in
+  let expected = { key = "a"; value = "b=c" } in
+  mk_test ~expected config
+
+let test_multiple_equality2 =
+  let config = "a = b = c" in
+  let expected = { key = "a"; value = "b = c" } in
+  mk_test ~expected config
+
+let test_section =
+  let config = "== Section 2 ==" in
+  let expected = { key = ""; value = "= Section 2 ==" } in
+  mk_test ~expected config
+
+let test_comment =
+  let config = "/= this is a comment" in
+  let expected = { key = "/"; value = "this is a comment" } in
+  mk_test ~expected config
 
 let tests =
   [
@@ -19,4 +55,18 @@ let tests =
     test "\nkey = val\n";
     test "key \n= val\n";
     test "  \n key  \n=  val  \n\n  ";
+    test_empty_value "key =";
+    test_empty_value "key =\n";
+    test_empty_value "key =  ";
+    test_empty_value "key =  \n";
+    test_empty_key "= val";
+    test_empty_key "  = val";
+    test_empty_key "\n  = val";
+    test_empty_key_value "=";
+    test_empty_key_value "  =  ";
+    test_empty_key_value "\n  =  \n";
+    test_multiple_equality;
+    test_multiple_equality2;
+    test_section;
+    test_comment;
   ]
