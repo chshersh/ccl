@@ -1,3 +1,6 @@
+module Model = Model
+module Parser = Parser
+
 let read filename =
   In_channel.with_open_bin filename (fun channel ->
       let contents = In_channel.input_all channel in

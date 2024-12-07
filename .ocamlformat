@@ -1,0 +1,5 @@
+profile = default
+break-cases = fit-or-vertical
+break-infix = wrap-or-vertical
+doc-comments = before
+type-decl = sparse
