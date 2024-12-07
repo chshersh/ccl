@@ -18,8 +18,14 @@
  (name ccl)
  (synopsis "Categorical Configuration Language")
  (description "A minimalistic yet powerful configuration languaged based on category theory principles")
- (depends ocaml dune angstrom)
+ (depends
+   ocaml
+   dune
+   angstrom
+   (alcotest
+     (and
+      :with-test
+      (>= 1.3.0)))
+ )
  (tags
   (config language parser)))
-
-; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
