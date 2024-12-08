@@ -16,8 +16,21 @@ type config = key_val list
 module KeyMap : Map.S with type key = key
 
 (** Actual parsed value and the type of the Key-Value map *)
-type value =
+type value_entry =
   | String of string
-  | Nested of t
+  | Nested of entry_map
 
-and t = value list KeyMap.t
+and entry_map = value_entry list KeyMap.t
+
+(** Normalised value. With each key, after merging all individual entries, there
+could be associated a list of plain strings (old values) and a (potentially
+empty) nested map.
+
+This value is obtained from [entry-map]:
+
+* All [String] values inside [entry_map] are combined into a single list
+* All [Nested] maps are merged. *)
+type t = Fix of t KeyMap.t
+
+(** Normalise deep entry map into the canonical representation. *)
+val fix : entry_map -> t
