@@ -6,8 +6,8 @@ let rec add_key_val key_map ({ key; value } : Model.key_val) =
   let value =
     match Parser.parse_value value with
     (* Parsing error: Ignore, just return the value unchanged *)
-    | Parser.Unchanged | Parse_error _ -> Model.String value
-    | Key_values key_values -> Nested (fix key_values)
+    | Error _ -> Model.String value
+    | Ok key_values -> Nested (fix key_values)
   in
   KeyMap.update key
     (function
@@ -27,7 +27,7 @@ let main () =
   print_endline "Started parsing...";
   let kvs = read file in
   match kvs with
-  | Error (`Parser msg) -> Printf.printf "Error %s\n%!" msg
+  | Error (`Parse_error msg) -> Printf.printf "Error %s\n%!" msg
   | Ok kvs ->
       ListLabels.iter kvs ~f:(fun ({ key; value } : Model.key_val) ->
           Printf.printf "%s = %s\n%!" key value)

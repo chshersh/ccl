@@ -40,6 +40,36 @@ date = 2024-05-25
   in
   check ~name ~expected ~config
 
+let test_list_like name =
+  let config = {|
+= 3
+= 1
+= 2
+|} in
+  let expected =
+    [
+      { key = ""; value = "3" };
+      { key = ""; value = "1" };
+      { key = ""; value = "2" };
+    ]
+  in
+  check ~name ~expected ~config
+
+let test_array_like name =
+  let config = {|
+1 =
+2 =
+3 =
+|} in
+  let expected =
+    [
+      { key = "1"; value = "" };
+      { key = "2"; value = "" };
+      { key = "3"; value = "" };
+    ]
+  in
+  check ~name ~expected ~config
+
 let test name test =
   let name = Printf.sprintf "[Multiple] %s" name in
   Alcotest_extra.quick name (fun () -> test name)
@@ -49,4 +79,6 @@ let tests =
     test "Two key-value pairs" test_two;
     test "Config with trailing and leading" test_untrimmed;
     test "Real-life-like" test_real;
+    test "List-like" test_list_like;
+    test "Array-like" test_array_like;
   ]

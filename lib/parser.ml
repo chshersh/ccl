@@ -1,6 +1,6 @@
 open Angstrom
 
-type error = [ `Parser of string ]
+type error = [ `Parse_error of string ]
 
 let space = char ' ' <|> char '\t' >>| fun _ -> ()
 let blank = skip_many (space <|> end_of_line)
@@ -61,30 +61,26 @@ let kvs_p =
   let* _ = blank in
   many (key_val 0)
 
-type parsed_value =
-  | Parse_error of string
-  | Unchanged
-  | Key_values of Model.key_val list
-
 let nested_kvs_p =
   let* opt_char = peek_char in
   match opt_char with
   (* End of input *)
-  | None -> return Unchanged
+  | None -> return []
   | Some '\n' ->
       let* () = end_of_line in
       let* spaces = many space in
       let prefix_len = List.length spaces in
-      let* kvs = many (key_val prefix_len) in
-      return (Key_values kvs)
-  | Some _ -> return Unchanged
+      many (key_val prefix_len)
+  | Some _ ->
+      (* Failing here to use ~consume:All *)
+      fail "Unchanged"
 
 let parse str =
   match parse_string ~consume:All kvs_p str with
-  | Error msg -> Error (`Parser msg)
+  | Error msg -> Error (`Parse_error msg)
   | Ok v -> Ok v
 
 let parse_value str =
   match parse_string ~consume:All nested_kvs_p str with
-  | Error msg -> Parse_error msg
-  | Ok v -> v
+  | Error msg -> Error (`Parse_error msg)
+  | Ok v -> Ok v

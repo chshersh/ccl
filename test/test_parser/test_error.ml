@@ -4,7 +4,7 @@ let check ~name ~expected ~config =
 
 let test_no_value name =
   let config = "key" in
-  let expected = `Parser ": end_of_input" in
+  let expected = `Parse_error ": end_of_input" in
   check ~name ~expected ~config
 
 let test name test =
