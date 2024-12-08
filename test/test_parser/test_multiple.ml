@@ -40,7 +40,9 @@ date = 2024-05-25
   in
   check ~name ~expected ~config
 
-let test name test = Alcotest_extra.quick name (fun () -> test name)
+let test name test =
+  let name = Printf.sprintf "[Multiple] %s" name in
+  Alcotest_extra.quick name (fun () -> test name)
 
 let tests =
   [

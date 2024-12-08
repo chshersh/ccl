@@ -9,7 +9,7 @@ let rtrim str =
     if i < 0 then -1
     else
       match str.[i] with
-      | ' ' | '\t' -> find_last_non_space (i - 1)
+      | ' ' | '\t' | '\n' -> find_last_non_space (i - 1)
       | _ -> i
   in
 

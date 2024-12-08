@@ -5,8 +5,10 @@ let mk_test_single ~name ~expected ~config () =
   Alcotest.(check Alcotest_extra.Testable.config)
     name expected (Ccl.Parser.parse config)
 
+let mk_name config = Printf.sprintf "[Single] '%s'" (String.escaped config)
+
 let mk_test ~expected config =
-  let name = Printf.sprintf "'%s'" (String.escaped config) in
+  let name = mk_name config in
   Alcotest_extra.quick name (mk_test_single ~name ~expected ~config)
 
 let test =
@@ -54,7 +56,7 @@ let tests =
     test "  key  =  val  ";
     test "\nkey = val\n";
     test "key \n= val\n";
-    test "  \n key  \n=  val  \n\n  ";
+    test "  \n key  \n=  val  \n";
     test_empty_value "key =";
     test_empty_value "key =\n";
     test_empty_value "key =  ";

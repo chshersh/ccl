@@ -50,4 +50,4 @@ let expected =
 
 let test_stress name = check ~name ~expected ~config
 let test name test = Alcotest_extra.quick name (fun () -> test name)
-let tests = [ test "Stress test on a big example" test_stress ]
+let tests = [ test "[Stress] Stress test on a big example" test_stress ]

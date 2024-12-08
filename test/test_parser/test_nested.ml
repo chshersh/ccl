@@ -21,6 +21,16 @@ key =
   let expected = [ { key = "key"; value = "\n  line1\n  line2" } ] in
   check ~name ~expected ~config
 
+let test_multi_line_skip name =
+  let config = {|
+key =
+  line1
+
+  line2
+|} in
+  let expected = [ { key = "key"; value = "\n  line1\n\n  line2" } ] in
+  check ~name ~expected ~config
+
 let test_nested_key_value name =
   let config = {|
 key =
@@ -53,12 +63,15 @@ key =
   in
   check ~name ~expected ~config
 
-let test name test = Alcotest_extra.quick name (fun () -> test name)
+let test name test =
+  let name = Printf.sprintf "[Nested] %s" name in
+  Alcotest_extra.quick name (fun () -> test name)
 
 let tests =
   [
     test "Single-line nested value" test_single_line;
     test "Multi-line nested value" test_multi_line;
+    test "Multi-line with an empty line" test_multi_line_skip;
     test "Nested key-value pairs" test_nested_key_value;
     test "Deep nested key-value pairs" test_nested_key_value;
   ]
