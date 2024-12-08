@@ -1,8 +1,8 @@
 open Ccl.Model
 
 let check ~name ~expected ~config =
-  Alcotest.(check Alcotest_extra.Testable.config)
-    name expected (Ccl.Parser.parse config)
+  Alcotest.(check Alcotest_extra.Testable.parse_result)
+    name (Ok expected) (Ccl.Parser.parse config)
 
 let test_single_line name =
   let config = {|

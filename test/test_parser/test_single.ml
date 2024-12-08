@@ -2,8 +2,8 @@ open Ccl.Model
 
 let mk_test_single ~name ~expected ~config () =
   let expected = [ expected ] in
-  Alcotest.(check Alcotest_extra.Testable.config)
-    name expected (Ccl.Parser.parse config)
+  Alcotest.(check Alcotest_extra.Testable.parse_result)
+    name (Ok expected) (Ccl.Parser.parse config)
 
 let mk_name config = Printf.sprintf "[Single] '%s'" (String.escaped config)
 

@@ -10,5 +10,8 @@ let main () =
   let file = "test.ccl" in
   print_endline "Started parsing...";
   let kvs = read file in
-  ListLabels.iter kvs ~f:(fun ({ key; value } : Model.key_val) ->
-      Printf.printf "%s = %s\n%!" key value)
+  match kvs with
+  | Error (`Parser msg) -> Printf.printf "Error %s\n%!" msg
+  | Ok kvs ->
+      ListLabels.iter kvs ~f:(fun ({ key; value } : Model.key_val) ->
+          Printf.printf "%s = %s\n%!" key value)

@@ -1,5 +1,7 @@
 open Angstrom
 
+type error = [ `Parser of string ]
+
 let space = char ' ' <|> char '\t' >>| fun _ -> ()
 let blank = skip_many (space <|> end_of_line)
 
@@ -76,10 +78,10 @@ let nested_kvs_p =
 
 let parse str =
   match parse_string ~consume:All kvs_p str with
-  | Ok v -> v
-  | Error msg -> failwith msg
+  | Ok v -> Ok v
+  | Error msg -> Error (`Parser msg)
 
 let parse_value str =
   match parse_string ~consume:All nested_kvs_p str with
-  | Ok v -> v
-  | Error msg -> failwith msg
+  | Ok v -> Ok v
+  | Error msg -> Error (`Parser msg)

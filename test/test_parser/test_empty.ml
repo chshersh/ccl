@@ -1,6 +1,6 @@
 let mk_test_empty ~name config =
-  Alcotest.(check Alcotest_extra.Testable.config)
-    name [] (Ccl.Parser.parse config)
+  Alcotest.(check Alcotest_extra.Testable.parse_result)
+    name (Ok []) (Ccl.Parser.parse config)
 
 let mk_name config = Printf.sprintf "[Empty] '%s'" (String.escaped config)
 
