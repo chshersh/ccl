@@ -13,4 +13,4 @@ type value =
   | String of string
   | Nested of t
 
-and t = value KeyMap.t
+and t = value list KeyMap.t

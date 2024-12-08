@@ -61,27 +61,30 @@ let kvs_p =
   let* _ = blank in
   many (key_val 0)
 
+type parsed_value =
+  | Parse_error of string
+  | Unchanged
+  | Key_values of Model.key_val list
+
 let nested_kvs_p =
   let* opt_char = peek_char in
   match opt_char with
   (* End of input *)
-  | None -> return []
+  | None -> return Unchanged
   | Some '\n' ->
       let* () = end_of_line in
       let* spaces = many space in
       let prefix_len = List.length spaces in
-      many (key_val prefix_len)
-  | Some _ ->
-      (* TODO: Just return the string itself instead of reparsing *)
-      let* value = value_p 0 >>| String_extra.of_chars in
-      return [ ({ key = ""; value } : Model.key_val) ]
+      let* kvs = many (key_val prefix_len) in
+      return (Key_values kvs)
+  | Some _ -> return Unchanged
 
 let parse str =
   match parse_string ~consume:All kvs_p str with
-  | Ok v -> Ok v
   | Error msg -> Error (`Parser msg)
+  | Ok v -> Ok v
 
 let parse_value str =
   match parse_string ~consume:All nested_kvs_p str with
-  | Ok v -> Ok v
-  | Error msg -> Error (`Parser msg)
+  | Error msg -> Parse_error msg
+  | Ok v -> v
