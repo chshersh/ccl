@@ -12,7 +12,7 @@ let test_empty name =
 let test_single name =
   let ccl =
     Edsl.(
-      let* _ = add "key" in
+      let* _ = key "key" in
       finish)
   in
   let expected = KeyMap.of_list [ ("key", empty) ] in
@@ -21,8 +21,8 @@ let test_single name =
 let test_double name =
   let ccl =
     Edsl.(
-      let* _ = add "key1" in
-      let* _ = add "key2" in
+      let* _ = key "key1" in
+      let* _ = key "key2" in
       finish)
   in
   let expected = KeyMap.of_list [ ("key1", empty); ("key2", empty) ] in
@@ -31,26 +31,26 @@ let test_double name =
 let test_single_override name =
   let ccl =
     Edsl.(
-      let* _ = add "key" in
-      let* _ = add "key" in
+      let* _ = key "key" in
+      let* _ = key "key" in
       finish)
   in
   let expected = KeyMap.of_list [ ("key", empty) ] in
   check ~name ~expected:(Fix expected) ~ccl
 
-let test_zoom_empty name =
+let test_nested_empty name =
   let ccl =
     Edsl.(
-      let* _ = zoom "key" finish in
+      let* _ = nested "key" finish in
       finish)
   in
   let expected = KeyMap.of_list [ ("key", empty) ] in
   check ~name ~expected:(Fix expected) ~ccl
 
-let test_zoom_single name =
+let test_key_val name =
   let ccl =
     Edsl.(
-      let* _ = zoom "key" (add "nested") in
+      let* _ = key_val "key" "nested" in
       finish)
   in
   let expected =
@@ -58,14 +58,14 @@ let test_zoom_single name =
   in
   check ~name ~expected:(Fix expected) ~ccl
 
-let test_zoom_double name =
+let test_nested_double name =
   let ccl =
     Edsl.(
       let* _ =
-        zoom "key"
+        nested "key"
         @@
-        let* _ = add "nested1" in
-        let* _ = add "nested2" in
+        let* _ = key "nested1" in
+        let* _ = key "nested2" in
         finish
       in
       finish)
@@ -81,35 +81,35 @@ let test_zoom_double name =
 let test_stress name =
   let ccl =
     Edsl.(
-      let* _ = zoom "/" (add "This is a CCL document") in
-      let* _ = zoom "title" (add "CCL Example") in
-      let* _ = zoom "user" (zoom "guestId" (add "42")) in
+      let* _ = key_val "/" "This is a CCL document" in
+      let* _ = key_val "title" "CCL Example" in
       let* _ =
-        zoom "database"
+        nested "database"
         @@
-        let* _ = zoom "enabled" (add "true") in
+        let* _ = key_val "enabled" "true" in
         let* _ =
-          zoom "ports"
+          nested "ports"
           @@
-          let* _ = zoom "" (add "8000") in
-          let* _ = zoom "" (add "8001") in
-          let* _ = zoom "" (add "8002") in
+          let* _ = key_val "" "8000" in
+          let* _ = key_val "" "8001" in
+          let* _ = key_val "" "8002" in
           finish
         in
         let* _ =
-          zoom "limits"
+          nested "limits"
           @@
-          let* _ = zoom "cpu" (add "1500mi") in
-          let* _ = zoom "memory" (add "10Gb") in
+          let* _ = key_val "cpu" "1500mi" in
+          let* _ = key_val "memory" "10Gb" in
           finish
         in
         finish
       in
+      let* _ = nested "user" (key_val "guestId" "42") in
       let* _ =
-        zoom "user"
+        nested "user"
         @@
-        let* _ = zoom "login" (add "chshersh") in
-        let* _ = zoom "createdAt" (add "2024-12-31") in
+        let* _ = key_val "login" "chshersh" in
+        let* _ = key_val "createdAt" "2024-12-31" in
         finish
       in
       finish)
@@ -169,8 +169,8 @@ let tests =
     test "Singleton map" test_single;
     test "Double map" test_double;
     test "Singleton map with override" test_single_override;
-    test "Single zoom empty" test_zoom_empty;
-    test "Zoom with single nested" test_zoom_single;
-    test "Zoom with two nested" test_zoom_double;
+    test "Single nested empty" test_nested_empty;
+    test "Nested with single nested" test_key_val;
+    test "Nested with two nested" test_nested_double;
     test "Stress test" test_stress;
   ]

@@ -4,16 +4,17 @@ type 'a t = { run_state : Model.t -> 'a * Model.t }
 let run { run_state } = snd (run_state Model.empty)
 let finish = { run_state = (fun state -> ((), state)) }
 
-let add key =
+let key key =
   Model.
     {
       run_state =
-        (fun (Fix map) ->
-          let new_state = Fix (KeyMap.add key empty map) in
+        (fun state ->
+          let new_map = Fix (KeyMap.singleton key empty) in
+          let new_state = merge new_map state in
           ((), new_state));
     }
 
-let zoom key nested =
+let nested key nested =
   Model.
     {
       run_state =
@@ -23,6 +24,8 @@ let zoom key nested =
           let new_state = merge state zoomed_state in
           (a, new_state));
     }
+
+let key_val k v = nested k (key v)
 
 let bind { run_state } f =
   {
