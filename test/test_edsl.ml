@@ -1,0 +1,176 @@
+module Edsl = Ccl.Edsl
+open Ccl.Model
+
+let check ~name ~expected ~ccl =
+  Alcotest.(check Alcotest_extra.Testable.model_t) name expected (Edsl.run ccl)
+
+let test_empty name =
+  let ccl = Edsl.finish in
+  let expected = empty in
+  check ~name ~expected ~ccl
+
+let test_single name =
+  let ccl =
+    Edsl.(
+      let* _ = add "key" in
+      finish)
+  in
+  let expected = KeyMap.of_list [ ("key", empty) ] in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_double name =
+  let ccl =
+    Edsl.(
+      let* _ = add "key1" in
+      let* _ = add "key2" in
+      finish)
+  in
+  let expected = KeyMap.of_list [ ("key1", empty); ("key2", empty) ] in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_single_override name =
+  let ccl =
+    Edsl.(
+      let* _ = add "key" in
+      let* _ = add "key" in
+      finish)
+  in
+  let expected = KeyMap.of_list [ ("key", empty) ] in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_zoom_empty name =
+  let ccl =
+    Edsl.(
+      let* _ = zoom "key" finish in
+      finish)
+  in
+  let expected = KeyMap.of_list [ ("key", empty) ] in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_zoom_single name =
+  let ccl =
+    Edsl.(
+      let* _ = zoom "key" (add "nested") in
+      finish)
+  in
+  let expected =
+    KeyMap.of_list [ ("key", Fix (KeyMap.of_list [ ("nested", empty) ])) ]
+  in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_zoom_double name =
+  let ccl =
+    Edsl.(
+      let* _ =
+        zoom "key"
+        @@
+        let* _ = add "nested1" in
+        let* _ = add "nested2" in
+        finish
+      in
+      finish)
+  in
+  let expected =
+    KeyMap.of_list
+      [
+        ("key", Fix (KeyMap.of_list [ ("nested1", empty); ("nested2", empty) ]));
+      ]
+  in
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test_stress name =
+  let ccl =
+    Edsl.(
+      let* _ = zoom "/" (add "This is a CCL document") in
+      let* _ = zoom "title" (add "CCL Example") in
+      let* _ = zoom "user" (zoom "guestId" (add "42")) in
+      let* _ =
+        zoom "database"
+        @@
+        let* _ = zoom "enabled" (add "true") in
+        let* _ =
+          zoom "ports"
+          @@
+          let* _ = zoom "" (add "8000") in
+          let* _ = zoom "" (add "8001") in
+          let* _ = zoom "" (add "8002") in
+          finish
+        in
+        let* _ =
+          zoom "limits"
+          @@
+          let* _ = zoom "cpu" (add "1500mi") in
+          let* _ = zoom "memory" (add "10Gb") in
+          finish
+        in
+        finish
+      in
+      let* _ =
+        zoom "user"
+        @@
+        let* _ = zoom "login" (add "chshersh") in
+        let* _ = zoom "createdAt" (add "2024-12-31") in
+        finish
+      in
+      finish)
+  in
+
+  let expected =
+    KeyMap.of_list
+      [
+        ("/", Fix (KeyMap.of_list [ ("This is a CCL document", empty) ]));
+        ("title", Fix (KeyMap.of_list [ ("CCL Example", empty) ]));
+        ( "database",
+          Fix
+            (KeyMap.of_list
+               [
+                 ("enabled", Fix (KeyMap.of_list [ ("true", empty) ]));
+                 ( "ports",
+                   Fix
+                     (KeyMap.of_list
+                        [
+                          ( "",
+                            Fix
+                              (KeyMap.of_list
+                                 [
+                                   ("8000", empty);
+                                   ("8001", empty);
+                                   ("8002", empty);
+                                 ]) );
+                        ]) );
+                 ( "limits",
+                   Fix
+                     (KeyMap.of_list
+                        [
+                          ("cpu", Fix (KeyMap.of_list [ ("1500mi", empty) ]));
+                          ("memory", Fix (KeyMap.of_list [ ("10Gb", empty) ]));
+                        ]) );
+               ]) );
+        ( "user",
+          Fix
+            (KeyMap.of_list
+               [
+                 ("guestId", Fix (KeyMap.of_list [ ("42", empty) ]));
+                 ("login", Fix (KeyMap.of_list [ ("chshersh", empty) ]));
+                 ("createdAt", Fix (KeyMap.of_list [ ("2024-12-31", empty) ]));
+               ]) );
+      ]
+  in
+
+  check ~name ~expected:(Fix expected) ~ccl
+
+let test name test =
+  let name = Printf.sprintf "%s" name in
+  Alcotest_extra.quick name (fun () -> test name)
+
+let tests =
+  [
+    test "Empty" test_empty;
+    test "Singleton map" test_single;
+    test "Double map" test_double;
+    test "Singleton map with override" test_single_override;
+    test "Single zoom empty" test_zoom_empty;
+    test "Zoom with single nested" test_zoom_single;
+    test "Zoom with two nested" test_zoom_double;
+    test "Stress test" test_stress;
+  ]

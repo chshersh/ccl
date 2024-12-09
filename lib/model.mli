@@ -32,5 +32,11 @@ This value is obtained from [entry-map]:
 * All [Nested] maps are merged. *)
 type t = Fix of t KeyMap.t
 
+(** Self-explainable. *)
+val empty : t
+
+(** Merge two maps recursively. Keys from both Maps are preserved *)
+val merge : t -> t -> t
+
 (** Normalise deep entry map into the canonical representation. *)
 val fix : entry_map -> t

@@ -1,5 +1,6 @@
 module Model = Model
 module Parser = Parser
+module Edsl = Edsl
 module KeyMap = Model.KeyMap
 
 let rec add_key_val key_map ({ key; value } : Model.key_val) =
@@ -25,7 +26,7 @@ let read filename =
       Parser.parse contents)
 
 let main () =
-  let file = "test.ccl" in
+  let file = "example.ccl" in
   print_endline "Started parsing...";
   let kvs = read file in
   match kvs with
