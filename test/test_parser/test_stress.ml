@@ -1,7 +1,7 @@
 open Ccl.Model
 
 let check ~name ~expected ~config =
-  Alcotest.(check Alcotest_extra.Testable.parse_result)
+  Alcotest.(check Test_extra.Testable.parse_result)
     name (Ok expected) (Ccl.Parser.parse config)
 
 let config =
@@ -49,5 +49,5 @@ let expected =
   ]
 
 let test_stress name = check ~name ~expected ~config
-let test name test = Alcotest_extra.quick name (fun () -> test name)
+let test name test = Test_extra.quick name (fun () -> test name)
 let tests = [ test "[Stress] Stress test on a big example" test_stress ]

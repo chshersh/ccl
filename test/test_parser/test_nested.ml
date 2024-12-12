@@ -1,7 +1,7 @@
 open Ccl.Model
 
 let check ~name ~expected ~config =
-  Alcotest.(check Alcotest_extra.Testable.parse_result)
+  Alcotest.(check Test_extra.Testable.parse_result)
     name (Ok expected) (Ccl.Parser.parse config)
 
 let test_single_line name =
@@ -65,7 +65,7 @@ key =
 
 let test name test =
   let name = Printf.sprintf "[Nested] %s" name in
-  Alcotest_extra.quick name (fun () -> test name)
+  Test_extra.quick name (fun () -> test name)
 
 let tests =
   [

@@ -1,3 +1,3 @@
 (library
  (name test_parser)
- (libraries ccl alcotest alcotest_extra))
+ (libraries ccl alcotest test_extra))

@@ -2,7 +2,7 @@ module Edsl = Ccl.Edsl
 open Ccl.Model
 
 let check ~name ~expected ~ccl =
-  Alcotest.(check Alcotest_extra.Testable.model_t) name expected (Edsl.run ccl)
+  Alcotest.(check Test_extra.Testable.model_t) name expected (Edsl.run ccl)
 
 let test_empty name =
   let ccl = Edsl.finish in
@@ -161,7 +161,7 @@ let test_stress name =
 
 let test name test =
   let name = Printf.sprintf "%s" name in
-  Alcotest_extra.quick name (fun () -> test name)
+  Test_extra.quick name (fun () -> test name)
 
 let tests =
   [

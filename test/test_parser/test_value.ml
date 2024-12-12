@@ -2,7 +2,7 @@ open Ccl.Model
 open Ccl.Parser
 
 let check ~name ~expected ~config =
-  Alcotest.(check Alcotest_extra.Testable.parse_result)
+  Alcotest.(check Test_extra.Testable.parse_result)
     name expected (parse_value config)
 
 let unchanged = Error (`Parse_error ": Unchanged")
@@ -82,7 +82,7 @@ key2 = val2
 
 let test name test =
   let name = Printf.sprintf "[Value] %s" name in
-  Alcotest_extra.quick name (fun () -> test name)
+  Test_extra.quick name (fun () -> test name)
 
 let tests =
   [
