@@ -15,7 +15,8 @@ type config = key_val list
 (** A module for Map from keys to values *)
 module KeyMap : Map.S with type key = key
 
-(** Actual parsed value and the type of the Key-Value map *)
+(** Intermediate parsed value and the type of the Key-Value map. Used internally
+to convert from a list of key-value pairs to [t]. *)
 type value_entry =
   | String of string
   | Nested of entry_map
@@ -31,6 +32,8 @@ This value is obtained from [entry-map]:
 * All [String] values inside [entry_map] are combined into a single list
 * All [Nested] maps are merged. *)
 type t = Fix of t KeyMap.t
+
+val compare : t -> t -> int
 
 (** Self-explainable. *)
 val empty : t

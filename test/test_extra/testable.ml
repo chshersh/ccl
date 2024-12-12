@@ -26,8 +26,5 @@ let rec pp_model_t fmt (Model.Fix map) =
          Format.pp_print_string fmt " )")
        fmt
 
-let rec key_map_compare (Model.Fix map1) (Model.Fix map2) =
-  Model.KeyMap.compare key_map_compare map1 map2
-
 let model_t =
-  Alcotest.testable pp_model_t (fun t1 t2 -> key_map_compare t1 t2 = 0)
+  Alcotest.testable pp_model_t (fun t1 t2 -> Model.compare t1 t2 = 0)

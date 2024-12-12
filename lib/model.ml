@@ -17,6 +17,7 @@ and entry_map = value_entry list KeyMap.t
 
 type t = Fix of t KeyMap.t
 
+let rec compare (Fix map1) (Fix map2) = KeyMap.compare compare map1 map2
 let empty = Fix KeyMap.empty
 
 let rec merge (Fix map1) (Fix map2) =
