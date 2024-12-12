@@ -1,3 +1,4 @@
+module Stress = Stress
 module Testable = Testable
 
 let quick : string -> (unit -> unit) -> unit Alcotest.test_case =

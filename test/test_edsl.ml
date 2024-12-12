@@ -79,85 +79,9 @@ let test_nested_double name =
   check ~name ~expected:(Fix expected) ~ccl
 
 let test_stress name =
-  let ccl =
-    Edsl.(
-      let* _ = key_val "/" "This is a CCL document" in
-      let* _ = key_val "title" "CCL Example" in
-      let* _ =
-        nested "database"
-        @@
-        let* _ = key_val "enabled" "true" in
-        let* _ =
-          nested "ports"
-          @@
-          let* _ = key_val "" "8000" in
-          let* _ = key_val "" "8001" in
-          let* _ = key_val "" "8002" in
-          finish
-        in
-        let* _ =
-          nested "limits"
-          @@
-          let* _ = key_val "cpu" "1500mi" in
-          let* _ = key_val "memory" "10Gb" in
-          finish
-        in
-        finish
-      in
-      let* _ = nested "user" (key_val "guestId" "42") in
-      let* _ =
-        nested "user"
-        @@
-        let* _ = key_val "login" "chshersh" in
-        let* _ = key_val "createdAt" "2024-12-31" in
-        finish
-      in
-      finish)
-  in
-
-  let expected =
-    KeyMap.of_list
-      [
-        ("/", Fix (KeyMap.of_list [ ("This is a CCL document", empty) ]));
-        ("title", Fix (KeyMap.of_list [ ("CCL Example", empty) ]));
-        ( "database",
-          Fix
-            (KeyMap.of_list
-               [
-                 ("enabled", Fix (KeyMap.of_list [ ("true", empty) ]));
-                 ( "ports",
-                   Fix
-                     (KeyMap.of_list
-                        [
-                          ( "",
-                            Fix
-                              (KeyMap.of_list
-                                 [
-                                   ("8000", empty);
-                                   ("8001", empty);
-                                   ("8002", empty);
-                                 ]) );
-                        ]) );
-                 ( "limits",
-                   Fix
-                     (KeyMap.of_list
-                        [
-                          ("cpu", Fix (KeyMap.of_list [ ("1500mi", empty) ]));
-                          ("memory", Fix (KeyMap.of_list [ ("10Gb", empty) ]));
-                        ]) );
-               ]) );
-        ( "user",
-          Fix
-            (KeyMap.of_list
-               [
-                 ("guestId", Fix (KeyMap.of_list [ ("42", empty) ]));
-                 ("login", Fix (KeyMap.of_list [ ("chshersh", empty) ]));
-                 ("createdAt", Fix (KeyMap.of_list [ ("2024-12-31", empty) ]));
-               ]) );
-      ]
-  in
-
-  check ~name ~expected:(Fix expected) ~ccl
+  let ccl = Test_extra.Stress.edsl in
+  let expected = Fix Test_extra.Stress.key_map in
+  check ~name ~expected ~ccl
 
 let test name test =
   let name = Printf.sprintf "%s" name in
