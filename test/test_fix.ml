@@ -1,9 +1,10 @@
 module Edsl = Ccl.Edsl
+open Ccl.Parser
 open Ccl.Model
 
 let check ~name ~expected ~kvs =
   Alcotest.(check Test_extra.Testable.model_t)
-    name (Edsl.run expected) (Ccl.fix kvs)
+    name (Edsl.run expected) (fix kvs)
 
 let test_empty name =
   let kvs = [] in

@@ -1,4 +1,3 @@
-open Ccl.Model
 open Ccl.Parser
 
 let check ~name ~expected ~config =

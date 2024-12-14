@@ -1,36 +1,9 @@
 (** CCL type definitions and high-level functions to work with the parsed interface. *)
 
-(** A key is just a string. *)
-type key = string
+(** A helper module for a map from keys to values where the key is [string]. *)
+module KeyMap : Map.S with type key = string
 
-(** A single CCL entry is just a pair of key and value *)
-type key_val = {
-  key : key;
-  value : string;
-}
-
-(** A full CCL config is just a list key-value pairs*)
-type config = key_val list
-
-(** A module for Map from keys to values *)
-module KeyMap : Map.S with type key = key
-
-(** Intermediate parsed value and the type of the Key-Value map. Used internally
-to convert from a list of key-value pairs to [t]. *)
-type value_entry =
-  | String of string
-  | Nested of entry_map
-
-and entry_map = value_entry list KeyMap.t
-
-(** Normalised value. With each key, after merging all individual entries, there
-could be associated a list of plain strings (old values) and a (potentially
-empty) nested map.
-
-This value is obtained from [entry-map]:
-
-* All [String] values inside [entry_map] are combined into a single list
-* All [Nested] maps are merged. *)
+(** The actual type of the configuration. It's represented a dictionary from string to itself. *)
 type t = Fix of t KeyMap.t
 
 val compare : t -> t -> int
@@ -41,5 +14,9 @@ val empty : t
 (** Merge two maps recursively. Keys from both Maps are preserved *)
 val merge : t -> t -> t
 
-(** Normalise deep entry map into the canonical representation. *)
-val fix : entry_map -> t
+(** Convert a list of key-value pairs to the structured representation of map.
+
+The way it works is that the function parses values with [Parser.parse_value]
+recursively calls itself while parsing is possible. Thus, becoming a fixed point
+over the list of key-value pairs. *)
+val fix : Parser.key_val list -> t

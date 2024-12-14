@@ -23,7 +23,7 @@ The intended usage is the following:
 {[
 let example () =
   let filepath = "test.ccl" in
-  let contents =In_channel.with_open_bin filename In_channel.input_all in
+  let contents = In_channel.with_open_bin filename In_channel.input_all in
 
   match Ccl.Parser.parse contents with
   | Error (`Parse_error error) ->
@@ -35,7 +35,6 @@ let example () =
 ]}
 
 *)
-val fix : Model.key_val list -> Model.t
 
 (** Decode contents of a string as [Model.t] or return a parsing failure. *)
 val decode : string -> (Model.t, Parser.error) result

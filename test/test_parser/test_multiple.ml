@@ -1,4 +1,4 @@
-open Ccl.Model
+open Ccl.Parser
 
 let check ~name ~expected ~config =
   Alcotest.(check Test_extra.Testable.parse_result)

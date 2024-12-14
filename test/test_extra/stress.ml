@@ -25,13 +25,14 @@ user =
 |}
 
 let kvs =
-  [
-    { key = "/"; value = "This is a CCL document" };
-    { key = "title"; value = "CCL Example" };
-    {
-      key = "database";
-      value =
-        {|
+  Ccl.Parser.
+    [
+      { key = "/"; value = "This is a CCL document" };
+      { key = "title"; value = "CCL Example" };
+      {
+        key = "database";
+        value =
+          {|
   enabled = true
   ports =
     = 8000
@@ -40,10 +41,10 @@ let kvs =
   limits =
     cpu = 1500mi
     memory = 10Gb|};
-    };
-    { key = "user"; value = "\n  guestId = 42" };
-    { key = "user"; value = "\n  login = chshersh\n  createdAt = 2024-12-31" };
-  ]
+      };
+      { key = "user"; value = "\n  guestId = 42" };
+      { key = "user"; value = "\n  login = chshersh\n  createdAt = 2024-12-31" };
+    ]
 
 let key_map =
   KeyMap.of_list

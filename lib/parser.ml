@@ -1,5 +1,10 @@
 open Angstrom
 
+type key_val = {
+  key : string;
+  value : string;
+}
+
 type error = [ `Parse_error of string ]
 
 let space = char ' ' <|> char '\t' >>| fun _ -> ()
@@ -55,7 +60,7 @@ let key_val prefix_len =
   let* _ = char '=' in
   let* value = value_p prefix_len >>| trim_value in
   let* _ = blank in
-  return ({ key; value } : Model.key_val)
+  return { key; value }
 
 let kvs_p =
   let* _ = blank in

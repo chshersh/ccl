@@ -1,12 +1,3 @@
-type key = string
-
-type key_val = {
-  key : key;
-  value : string;
-}
-
-type config = key_val list
-
 module KeyMap = Map.Make (String)
 
 type value_entry =
@@ -30,12 +21,29 @@ let rec merge (Fix map1) (Fix map2) =
          | Some t1, Some t2 -> Some (merge t1 t2))
        map1 map2)
 
-let rec fix entry_map =
+let rec fix_entry_map entry_map =
   let normalise_entry = function
     | String v -> Fix (KeyMap.singleton v empty)
-    | Nested entry_map -> fix entry_map
+    | Nested entry_map -> fix_entry_map entry_map
   in
   let normalise entries =
     entries |> List.map normalise_entry |> List.fold_left merge empty
   in
   Fix (KeyMap.map normalise entry_map)
+
+let rec add_key_val key_map ({ key; value } : Parser.key_val) =
+  let value =
+    match Parser.parse_value value with
+    (* Parsing error: Ignore, just return the value unchanged *)
+    | Error _ -> String value
+    | Ok key_values -> Nested (of_key_vals key_values)
+  in
+  KeyMap.update key
+    (function
+      | None -> Some [ value ]
+      | Some old_value -> Some (old_value @ [ value ]))
+    key_map
+
+and of_key_vals key_vals = List.fold_left add_key_val KeyMap.empty key_vals
+
+let fix key_vals = key_vals |> of_key_vals |> fix_entry_map

@@ -1,4 +1,4 @@
-open Ccl.Model
+open Ccl.Parser
 
 let mk_test_single ~name ~expected ~config () =
   let expected = [ expected ] in
