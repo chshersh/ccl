@@ -1,3 +1,4 @@
+module Gen = Gen
 module Stress = Stress
 module Testable = Testable
 

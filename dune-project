@@ -26,6 +26,11 @@
      (and
       :with-test
       (>= 1.3.0)))
+   (qcheck
+     (and
+      :with-test
+      (>= 0.21)))
+   (qcheck-alcotest :with-test)
  )
  (tags
   (config language parser)))
