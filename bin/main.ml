@@ -1,1 +1,1 @@
-let () = Ccl.main ()
+let () = print_endline "Doing nothing..."

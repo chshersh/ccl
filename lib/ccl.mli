@@ -37,5 +37,10 @@ let example () =
 *)
 val fix : Model.key_val list -> Model.t
 
-(** TODO: WIP testing function *)
-val main : unit -> unit
+(** Decode contents of a string as [Model.t] or return a parsing failure. *)
+val decode : string -> (Model.t, Parser.error) result
+
+(** Read the file contents and run [decode] on them.
+
+NOTE: This function throws all the exceptions as reading the file. *)
+val decode_file : string -> (Model.t, Parser.error) result
