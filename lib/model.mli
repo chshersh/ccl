@@ -20,3 +20,6 @@ The way it works is that the function parses values with [Parser.parse_value]
 recursively calls itself while parsing is possible. Thus, becoming a fixed point
 over the list of key-value pairs. *)
 val fix : Parser.key_val list -> t
+
+(** Pretty-print the configuration. *)
+val pretty : t -> string

@@ -47,3 +47,20 @@ let rec add_key_val key_map ({ key; value } : Parser.key_val) =
 and of_key_vals key_vals = List.fold_left add_key_val KeyMap.empty key_vals
 
 let fix key_vals = key_vals |> of_key_vals |> fix_entry_map
+
+let pretty ccl =
+  let rec go indent buf (Fix map) =
+    map
+    |> KeyMap.iter (fun key value ->
+           let prefix = String.make indent ' ' in
+
+           Buffer.add_string buf prefix;
+           Buffer.add_string buf key;
+           Buffer.add_string buf " =\n";
+           go (indent + 2) buf value)
+  in
+
+  (* Create initial buffer with some approximate initial size. *)
+  let buf = Buffer.create 32 in
+  go 0 buf ccl;
+  Buffer.contents buf
