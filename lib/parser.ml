@@ -77,8 +77,8 @@ let nested_kvs_p =
       let prefix_len = List.length spaces in
       many (key_val prefix_len)
   | Some _ ->
-      (* Failing here to use ~consume:All *)
-      fail "Unchanged"
+      let* key_val = key_val 0 in
+      return [ key_val ]
 
 let parse str =
   match parse_string ~consume:All kvs_p str with

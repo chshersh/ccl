@@ -4,7 +4,7 @@ let check ~name ~expected ~config =
   Alcotest.(check Test_extra.Testable.parse_result)
     name expected (parse_value config)
 
-let unchanged = Error (`Parse_error ": Unchanged")
+let not_enough_input = Error (`Parse_error ": not enough input")
 
 let test_empty name =
   let config = "" in
@@ -13,7 +13,7 @@ let test_empty name =
 
 let test_spaces name =
   let config = "   " in
-  let expected = unchanged in
+  let expected = not_enough_input in
   check ~name ~expected ~config
 
 let test_eol name =
@@ -23,12 +23,17 @@ let test_eol name =
 
 let test_just_string name =
   let config = "val" in
-  let expected = unchanged in
+  let expected = not_enough_input in
   check ~name ~expected ~config
+
+let test_empty_key_val name =
+  let config = "=" in
+  let expected = [ { key = ""; value = "" } ] in
+  check ~name ~expected:(Ok expected) ~config
 
 let test_multi_line_plain name =
   let config = "val\n  next" in
-  let expected = unchanged in
+  let expected = not_enough_input in
   check ~name ~expected ~config
 
 let test_multi_line_plain_nested name =
@@ -89,6 +94,7 @@ let tests =
     test "Spaces" test_spaces;
     test "LineBreak" test_eol;
     test "val" test_just_string;
+    test "=" test_empty_key_val;
     test "Multi line plain" test_multi_line_plain;
     test "Multi line plain nested" test_multi_line_plain_nested;
     test "Single nested key=val" test_kv_single;

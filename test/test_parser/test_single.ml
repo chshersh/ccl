@@ -37,6 +37,11 @@ let test_multiple_equality2 =
   let expected = { key = "a"; value = "b = c" } in
   mk_test ~expected config
 
+let test_empty_equality =
+  let config = " =  = " in
+  let expected = { key = ""; value = "=" } in
+  mk_test ~expected config
+
 let test_section =
   let config = "== Section 2 ==" in
   let expected = { key = ""; value = "= Section 2 ==" } in
@@ -69,6 +74,7 @@ let tests =
     test_empty_key_value "\n  =  \n";
     test_multiple_equality;
     test_multiple_equality2;
+    test_empty_equality;
     test_section;
     test_comment;
   ]
