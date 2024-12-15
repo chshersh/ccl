@@ -6,7 +6,7 @@ let test_roundtrip =
   let parse = Ccl.decode in
 
   QCheck2.Test.make ~count:100 ~print:Extra_gen.print_test_ccl
-    ~name:"Roundtrip : parse ∘ pretty ≡ id" Extra_gen.test_ccl
+    ~name:"[Roundtrip] parse ∘ pretty ≡ id" Extra_gen.test_ccl
     (fun Extra_gen.{ model = t_old; _ } ->
       let t_new = t_old |> pretty |> parse in
       match t_new with

@@ -5,5 +5,5 @@ let () =
       ("eDSL", Test_edsl.tests);
       ("Fix", Test_fix.tests);
       ("Pretty", Test_pretty.tests);
-      ("Property[Roundtrip]", Test_property_roundtrip.tests);
+      ("Properties", Test_property.tests);
     ]
