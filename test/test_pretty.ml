@@ -1,23 +1,22 @@
-module Edsl = Ccl.Edsl
-open Ccl.Model
+module Model = Ccl.Model
 
 let check ~name ~input ~expected =
   let expected_string = String.trim expected in
-  let actual_string = input |> Edsl.run |> pretty |> String.trim in
+  let actual_string = input |> Model.pretty |> String.trim in
   Alcotest.(check string) name expected_string actual_string
 
 let test_empty name =
-  let input = Edsl.finish in
+  let input = Model.empty in
   let expected = "" in
   check ~name ~input ~expected
 
 let test_single_empty name =
-  let input = Edsl.key "key" in
+  let input = Model.nested "key" [] in
   let expected = "key =" in
   check ~name ~input ~expected
 
 let test_single_key_val name =
-  let input = Edsl.key_val "key" "val" in
+  let input = Model.key_val "key" "val" in
   let expected = {|
 key =
   val =
@@ -25,12 +24,7 @@ key =
   check ~name ~input ~expected
 
 let test_two_key_vals name =
-  let input =
-    Edsl.(
-      let* _ = key_val "key1" "val1" in
-      let* _ = key_val "key2" "val2" in
-      finish)
-  in
+  let input = Model.(of_list [ "key1" =: "val1"; "key2" =: "val2" ]) in
   let expected = {|
 key1 =
   val1 =

@@ -31,16 +31,14 @@ let test_associativity =
 
 let test_left_empty =
   QCheck2.Test.make ~count:5 ~print:Extra_gen.print_test_ccl
-    ~name:"[Left  Empty  ] ε ⊕ x ≡ x" Extra_gen.test_ccl
-    (fun x ->
+    ~name:"[Left  Empty  ] ε ⊕ x ≡ x" Extra_gen.test_ccl (fun x ->
       let x = x.Extra_gen.model in
       let result = Model.(merge empty x) in
       Model.compare x result = 0)
 
 let test_right_empty =
   QCheck2.Test.make ~count:5 ~print:Extra_gen.print_test_ccl
-    ~name:"[Right Empty  ] x ⊕ ε ≡ x" Extra_gen.test_ccl
-    (fun x ->
+    ~name:"[Right Empty  ] x ⊕ ε ≡ x" Extra_gen.test_ccl (fun x ->
       let x = x.Extra_gen.model in
       let result = Model.(merge x empty) in
       Model.compare x result = 0)

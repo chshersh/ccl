@@ -64,3 +64,13 @@ let pretty ccl =
   let buf = Buffer.create 32 in
   go 0 buf ccl;
   Buffer.contents buf
+
+(* ---- *)
+(* eDSL *)
+(* ---- *)
+
+let key k = Fix (KeyMap.singleton k empty)
+let key_val k v = Fix (KeyMap.singleton k (key v))
+let of_list = List.fold_left merge empty
+let nested k vals = Fix (KeyMap.singleton k (of_list vals))
+let ( =: ) = key_val

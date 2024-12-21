@@ -4,13 +4,6 @@ module Model = Model
 (** Parser of the configuration. *)
 module Parser = Parser
 
-(** A module to construct CCL config values in pure OCaml without going through
-the configuration. It uses the embeded Domain-Specific Language (eDSL) approach.
-
-Useful for testing of defining default values.
-*)
-module Edsl = Edsl
-
 (** This function converts a list of key-value pairs into [value Model.KeyMap.t].
 
 This function parses values of the input list using the same parser as for the

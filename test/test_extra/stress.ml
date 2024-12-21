@@ -1,5 +1,4 @@
-module Edsl = Ccl.Edsl
-open Ccl.Model
+module Model = Ccl.Model
 
 let text =
   {|
@@ -47,6 +46,7 @@ let kvs =
     ]
 
 let key_map =
+  let open Model in
   KeyMap.of_list
     [
       ("/", Fix (KeyMap.of_list [ ("This is a CCL document", empty) ]));
@@ -88,36 +88,17 @@ let key_map =
     ]
 
 let edsl =
-  Edsl.(
-    let* _ = key_val "/" "This is a CCL document" in
-    let* _ = key_val "title" "CCL Example" in
-    let* _ =
-      nested "database"
-      @@
-      let* _ = key_val "enabled" "true" in
-      let* _ =
-        nested "ports"
-        @@
-        let* _ = key_val "" "8000" in
-        let* _ = key_val "" "8001" in
-        let* _ = key_val "" "8002" in
-        finish
-      in
-      let* _ =
-        nested "limits"
-        @@
-        let* _ = key_val "cpu" "1500mi" in
-        let* _ = key_val "memory" "10Gb" in
-        finish
-      in
-      finish
-    in
-    let* _ = nested "user" (key_val "guestId" "42") in
-    let* _ =
-      nested "user"
-      @@
-      let* _ = key_val "login" "chshersh" in
-      let* _ = key_val "createdAt" "2024-12-31" in
-      finish
-    in
-    finish)
+  Model.(
+    of_list
+      [
+        "/" =: "This is a CCL document";
+        "title" =: "CCL Example";
+        nested "database"
+          [
+            "enabled" =: "true";
+            nested "ports" [ "" =: "8000"; "" =: "8001"; "" =: "8002" ];
+            nested "limits" [ "cpu" =: "1500mi"; "memory" =: "10Gb" ];
+          ];
+        nested "user" [ "guestId" =: "42" ];
+        nested "user" [ "login" =: "chshersh"; "createdAt" =: "2024-12-31" ];
+      ])
