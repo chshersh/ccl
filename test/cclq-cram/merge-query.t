@@ -53,3 +53,7 @@ Merge and queries
   
   baz =
   
+Pipe queries
+  $ cat sample2.ccl | cclq this | cclq bar
+  baz =
+  

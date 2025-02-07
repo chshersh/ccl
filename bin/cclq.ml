@@ -18,6 +18,9 @@ end
         exit 0
     | [| _ |] ->
       (Seq.return "/dev/stdin", [[]])
+    | [| _; query |] ->
+      let query = String.split_on_char '=' query in
+      (Seq.return "/dev/stdin", [query])
     | _ -> match Array.find_index (String.equal "--") Sys.argv with
       | None ->
         let files = Array.to_seq (Array.sub Sys.argv 1 (Array.length Sys.argv - 2)) in
