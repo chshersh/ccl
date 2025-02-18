@@ -1,5 +1,16 @@
 (* simple queries for ccl *)
 
+(* compatibility with ocaml.5.1 *)
+exception Index_found of int
+let array_find_index predicate arr =
+  try
+    for idx = 0 to Array.length arr - 1 do
+      if predicate (Array.get arr idx) then raise (Index_found idx)
+    done;
+    None
+  with
+    | Index_found idx -> Some idx
+
 module Params
 : sig
   val files : string Seq.t
@@ -21,7 +32,7 @@ end
     | [| _; query |] ->
       let query = String.split_on_char '=' query in
       (Seq.return "/dev/stdin", [query])
-    | _ -> match Array.find_index (String.equal "--") Sys.argv with
+    | _ -> match array_find_index (String.equal "--") Sys.argv with
       | None ->
         let files = Array.to_seq (Array.sub Sys.argv 1 (Array.length Sys.argv - 2)) in
         let query = String.split_on_char '=' Sys.argv.(Array.length Sys.argv - 1) in

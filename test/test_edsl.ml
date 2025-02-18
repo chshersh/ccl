@@ -1,4 +1,12 @@
-module Model = Ccl.Model
+module Model = struct
+  include Ccl.Model
+  module KeyMap = struct
+    include KeyMap
+    let of_list l =
+      (* compatibility with ocaml.4.14 *)
+      of_seq (List.to_seq l)
+  end
+end
 
 let check ~name ~expected ~ccl =
   Alcotest.(check Test_extra.Testable.model_t) name expected ccl
