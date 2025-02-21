@@ -47,22 +47,26 @@ let kvs =
 
 let key_map =
   let open Model in
-  KeyMap.of_list
+  let keymap_of_list l =
+    (* compatibility with ocaml.4.14 *)
+    KeyMap.of_seq (List.to_seq l)
+  in
+  keymap_of_list
     [
-      ("/", Fix (KeyMap.of_list [ ("This is a CCL document", empty) ]));
-      ("title", Fix (KeyMap.of_list [ ("CCL Example", empty) ]));
+      ("/", Fix (keymap_of_list [ ("This is a CCL document", empty) ]));
+      ("title", Fix (keymap_of_list [ ("CCL Example", empty) ]));
       ( "database",
         Fix
-          (KeyMap.of_list
+          (keymap_of_list
              [
-               ("enabled", Fix (KeyMap.of_list [ ("true", empty) ]));
+               ("enabled", Fix (keymap_of_list [ ("true", empty) ]));
                ( "ports",
                  Fix
-                   (KeyMap.of_list
+                   (keymap_of_list
                       [
                         ( "",
                           Fix
-                            (KeyMap.of_list
+                            (keymap_of_list
                                [
                                  ("8000", empty);
                                  ("8001", empty);
@@ -71,19 +75,19 @@ let key_map =
                       ]) );
                ( "limits",
                  Fix
-                   (KeyMap.of_list
+                   (keymap_of_list
                       [
-                        ("cpu", Fix (KeyMap.of_list [ ("1500mi", empty) ]));
-                        ("memory", Fix (KeyMap.of_list [ ("10Gb", empty) ]));
+                        ("cpu", Fix (keymap_of_list [ ("1500mi", empty) ]));
+                        ("memory", Fix (keymap_of_list [ ("10Gb", empty) ]));
                       ]) );
              ]) );
       ( "user",
         Fix
-          (KeyMap.of_list
+          (keymap_of_list
              [
-               ("guestId", Fix (KeyMap.of_list [ ("42", empty) ]));
-               ("login", Fix (KeyMap.of_list [ ("chshersh", empty) ]));
-               ("createdAt", Fix (KeyMap.of_list [ ("2024-12-31", empty) ]));
+               ("guestId", Fix (keymap_of_list [ ("42", empty) ]));
+               ("login", Fix (keymap_of_list [ ("chshersh", empty) ]));
+               ("createdAt", Fix (keymap_of_list [ ("2024-12-31", empty) ]));
              ]) );
     ]
 
