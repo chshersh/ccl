@@ -12,24 +12,21 @@ let test_empty name =
 
 let test_single_empty name =
   let input = Model.nested "key" [] in
-  let expected = "key =" in
+  let expected = "key" in
   check ~name ~input ~expected
 
 let test_single_key_val name =
   let input = Model.key_val "key" "val" in
   let expected = {|
-key =
-  val =
+key = val
 |} in
   check ~name ~input ~expected
 
 let test_two_key_vals name =
   let input = Model.(of_list [ "key1" =: "val1"; "key2" =: "val2" ]) in
   let expected = {|
-key1 =
-  val1 =
-key2 =
-  val2 =
+key1 = val1
+key2 = val2
 |} in
   check ~name ~input ~expected
 
@@ -37,30 +34,22 @@ let test_stress name =
   let input = Test_extra.Stress.edsl in
   let expected =
     {|
-/ =
-  This is a CCL document =
+/ = This is a CCL document
 database =
-  enabled =
-    true =
+  enabled = true
   limits =
-    cpu =
-      1500mi =
-    memory =
-      10Gb =
+    cpu = 1500mi
+    memory = 10Gb
   ports =
      =
       8000 =
       8001 =
       8002 =
-title =
-  CCL Example =
+title = CCL Example
 user =
-  createdAt =
-    2024-12-31 =
-  guestId =
-    42 =
-  login =
-    chshersh =
+  createdAt = 2024-12-31
+  guestId = 42
+  login = chshersh
 |}
   in
   check ~name ~input ~expected

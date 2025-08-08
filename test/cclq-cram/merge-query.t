@@ -16,26 +16,34 @@ Produce more sample
   >   that =
   >   foo =
   >   bar = baz
+  > weird =
+  >   = this
+  >   = list
+  >   = is
+  >   = differently set than the previous one
   > EOF
 
 Merge
   $ cclq sample1.ccl sample2.ccl --
   numbers =
-    bar =
-      12341233 =
+    bar = 12341233
     baz =
       123 =
       12341236 =
     foo =
       1 =
       12341234 =
-  somekey =
-    someval =
+  somekey = someval
   this =
-    bar =
-      baz =
+    bar = baz
     foo =
     that =
+  weird =
+     =
+      differently set than the previous one =
+      is =
+      list =
+      this =
   
 
 Merge and query
@@ -49,11 +57,11 @@ Merge and queries
   1 =
   12341234 =
   
-  someval =
+  someval
   
-  baz =
+  baz
   
 Pipe queries
   $ cat sample2.ccl | cclq this | cclq bar
-  baz =
+  baz
   
